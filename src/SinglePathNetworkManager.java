@@ -15,14 +15,17 @@ public class SinglePathNetworkManager implements TimeIncListener {
 
     Random rand = new Random();
 
+    private Network network;
+    
     private ArrayList<DataPacket> dataPackets = new ArrayList<>();
 
     public SimulationResult simulate() {
-        Network network = new Network();
+        network = new Network();
         network.setTimeIncListener(this);
         while (Globals.CURRENT_TIME < Statics.TOTAL_TIME) {
             if (isTherePacket()) {
                 if (network.isChannelEstablished()) {
+                	Globals.PACKETS_TRANSMITTED++;
                     network.startTransmission(dataPackets);
                 } else {
                     network.startRouteDiscovery();
@@ -37,7 +40,11 @@ public class SinglePathNetworkManager implements TimeIncListener {
         System.out.println("TOTAL PACKETS: " + Globals.TOTAL_NUMBER_OF_PACKETS);
         System.out.println("FAILED PACKETS: " + Globals.FAILED_PACKETS);
         System.out.println("DELIVERED PACKETS: " + Globals.DELIVERED_PACKETS);
+        System.out.println("AVERAGE TIME IN SYSTEM: " + network.getAvgInSystemTime());
+        System.out.println("DELIVERE PACKAGE RATE: " + Globals.DELIVERED_PACKETS * 1.0 / Globals.TOTAL_NUMBER_OF_PACKETS);
 
+        dataPackets= new ArrayList<>();
+        
         return new SimulationResult();
 
     }
@@ -48,9 +55,11 @@ public class SinglePathNetworkManager implements TimeIncListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
+            	
                 int rv = rand.nextInt(Statics.NEW_PACKET_PROBABILITY);
+                // int rv = getPoisson(10);
                 // return rv == 1 ? true : false;
-                if (rv == 1) {
+                if (rv == 0) {
                     Globals.TOTAL_NUMBER_OF_PACKETS++;
                     DataPacket dataPacket = new DataPacket();
                     dataPackets.add(dataPacket);
@@ -63,6 +72,23 @@ public class SinglePathNetworkManager implements TimeIncListener {
 
     private boolean isTherePacket() {
         return dataPackets.size() > 0 ? true : false;
+    }
+    
+    public static int getPoisson(double lambda) {
+	  double L = Math.exp(-lambda);
+	  double p = 1.0;
+	  int k = 0;
+
+	  do {
+	    k++;
+	    p *= Math.random();
+	  } while (p > L);
+
+	  return k - 1;
+	}
+    
+    public double getAvgTimeInSystem() {
+    	return network.getAvgInSystemTime();
     }
 
 }

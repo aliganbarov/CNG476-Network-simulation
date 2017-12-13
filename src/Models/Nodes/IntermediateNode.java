@@ -86,7 +86,7 @@ public class IntermediateNode extends Node {
         }
         // check if next node is failed
         int rv = rand.nextInt(Statics.NODE_FAILURE_PROBABILITY);
-        if (rv == 1 && descendingEdges.get(0).getNode().getNodeNumber() != -2) {
+        if (rv == 0 && descendingEdges.get(0).getNode().getNodeNumber() != -2) {
             // failed to send
             Globals.FAILED_PACKETS++;
             // notify source node about failed node
@@ -98,7 +98,7 @@ public class IntermediateNode extends Node {
             handleLinkBreakageUp(descendingEdges.get(0).getNode());
             // chance for node to recover
             rv = rand.nextInt(Statics.NODE_RECOVER_PROBABILITY);
-            if (rv == 1) {
+            if (rv == 0) {
                 descendingEdges.get(0).getNode().setHasFailed(false);
                 System.out.println("Node " + descendingEdges.get(0).getNode().getNodeNumber() + " has recovered at " + Globals.CURRENT_TIME);
             }

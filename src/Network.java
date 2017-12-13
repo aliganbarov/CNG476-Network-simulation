@@ -85,4 +85,7 @@ public class Network {
         sourceNode.printChannel();
     }
 
+    public double getAvgInSystemTime() {
+    	return destinationNode.getAvgInSystemTime();
+    }
 }

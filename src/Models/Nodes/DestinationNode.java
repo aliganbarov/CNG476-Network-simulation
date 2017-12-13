@@ -5,6 +5,7 @@ import Models.Packets.AckMessage;
 import Models.Packets.DataPacket;
 import Models.Packets.SetupMessage;
 import Parameters.Globals;
+import Parameters.Statics;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 public class DestinationNode extends Node {
 
     private ArrayList<SetupMessage> setupMessages = new ArrayList<>();
+    private ArrayList<DataPacket> donePackets = new ArrayList<>();
 
     @Override
     public void handleSetupMessage(SetupMessage setupMessage) {
@@ -71,6 +73,9 @@ public class DestinationNode extends Node {
 
     @Override
     public void handleDataPacket(ArrayList<DataPacket> dataPackets) {
+    	if (dataPackets.get(0).getArrivalTime() > Statics.TOTAL_TIME) {
+    		return;
+    	}
         // inc global time
         Globals.CURRENT_TIME++;
         if (timeIncListener != null) {
@@ -78,7 +83,10 @@ public class DestinationNode extends Node {
         }
         // send ack that received data packet
         Globals.DELIVERED_PACKETS++;
-        System.out.println("Packet delivered at " + Globals.CURRENT_TIME + ". Packet No: " + dataPackets.get(0).getDataPacketNumb());
+        System.out.println("Packet delivered at " + Globals.CURRENT_TIME + ". Packet No: " + dataPackets.get(0).getDataPacketNumb() + 
+        		". Packet arrived at: " + dataPackets.get(0).getArrivalTime());
+        dataPackets.get(0).setFinishedTime(Globals.CURRENT_TIME);
+        donePackets.add(dataPackets.get(0));
         dataPackets.remove(0);
     }
 
@@ -105,5 +113,14 @@ public class DestinationNode extends Node {
 
     public boolean hasSetupMessage() {
         return setupMessages.size() == 0 ? false : true;
+    }
+    
+    public double getAvgInSystemTime() {
+    	double totalTime = 0;
+    	for (int i = 0; i < donePackets.size(); i++) {
+    		totalTime = totalTime +  donePackets.get(i).getFinishedTime() - donePackets.get(i).getArrivalTime();
+    		// System.out.println("Arrival: " + donePackets.get(i).getArrivalTime() + ", Finished: " + donePackets.get(i).getFinishedTime());
+    	}
+    	return totalTime / (donePackets.size() * 1.0);
     }
 }

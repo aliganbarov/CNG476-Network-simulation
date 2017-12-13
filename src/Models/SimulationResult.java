@@ -10,12 +10,14 @@ public class SimulationResult {
     private int totalNumberOfFailedPackets;
     private int totalNumberOfDeliveredPackets;
     private int totalTime;
+    private int totalNumberOfTransmittedPackets;
 
     public SimulationResult() {
         totalNumberOfPackets = Globals.TOTAL_NUMBER_OF_PACKETS;
         totalNumberOfDeliveredPackets = Globals.DELIVERED_PACKETS;
         totalNumberOfFailedPackets = Globals.FAILED_PACKETS;
         totalTime = Globals.CURRENT_TIME;
+        totalNumberOfTransmittedPackets = Globals.PACKETS_TRANSMITTED;
     }
 
     public int getTotalNumberOfPackets() {
@@ -32,5 +34,9 @@ public class SimulationResult {
 
     public int getTotalTime() {
         return totalTime;
+    }
+    
+    public int getTotalNumberOfTransmittedPackets() {
+    	return totalNumberOfTransmittedPackets;
     }
 }

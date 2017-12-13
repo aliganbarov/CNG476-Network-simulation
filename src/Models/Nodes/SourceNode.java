@@ -80,7 +80,8 @@ public class SourceNode extends Node {
         }
         // check if node is available
         int rv = rand.nextInt(Statics.NODE_FAILURE_PROBABILITY);
-        if (rv == 1) {
+        System.out.println("Probability of node failure is: " + rv);
+        if (rv == 0) {
             // node is failed
             Globals.FAILED_PACKETS++;
             System.out.println("Failed node from source at " + Globals.CURRENT_TIME + ", dropping packet " + dataPackets.get(0).getDataPacketNumb());
