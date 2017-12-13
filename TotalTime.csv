@@ -1,0 +1,11 @@
+Total time,Total # of packets,New packet probability,Node failure rate,Number of intermediate nodes,Packet delivery fraction,Average time in system,Normalized routing load
+11,4,0.2,1.0,4,0.0,NaN,NaN
+21,4,0.2,1.0,4,0.0,NaN,Infinity
+31,10,0.2,1.0,4,0.0,NaN,Infinity
+41,5,0.2,1.0,4,0.0,NaN,Infinity
+51,10,0.2,1.0,4,0.0,NaN,Infinity
+61,10,0.2,1.0,4,0.0,NaN,Infinity
+71,15,0.2,1.0,4,0.0,NaN,Infinity
+81,18,0.2,1.0,4,0.0,NaN,Infinity
+91,21,0.2,1.0,4,0.0,NaN,Infinity
+101,24,0.2,1.0,4,0.0,NaN,Infinity

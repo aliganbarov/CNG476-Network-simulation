@@ -14,32 +14,13 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-        int numbOfIterations = 1000;
+        int numbOfIterations = 10;
         SinglePathNetworkManager singlePathNetworkManager = new SinglePathNetworkManager();
         ArrayList<SimulationResult> simulationResults = new ArrayList<>();
-//        for (int i = 0; i < numbOfIterations; i++) {
-//            SimulationResult simulationResult = singlePathNetworkManager.simulate();
-//            simulationResults.add(simulationResult);
-//            Globals.PACKETS_TRANSMITTED = 0;
-//            Globals.CURRENT_TIME = 0;
-//            Globals.TOTAL_NUMBER_OF_PACKETS = 0;
-//            Globals.FAILED_PACKETS = 0;
-//            Globals.DELIVERED_PACKETS = 0;
-//            new DataPacket().resetDataPacketNumb();
-//        }
-//
-//        float totalDeliveryFraction = 0;
-//        for (int i = 0; i < simulationResults.size(); i++) {
-//            totalDeliveryFraction += simulationResults.get(i).getTotalNumberOfDeliveredPackets() * 1.0 /
-//                    simulationResults.get(i).getTotalNumberOfPackets();
-//        }
-        // System.out.println("Average delivery fraction: " + totalDeliveryFraction / numbOfIterations);
 
         // write results to file
         try {
-        	// writing results for # of packets
-        	
-            PrintWriter pw = new PrintWriter(new File("PacketsResult.csv"));
+            PrintWriter pw = new PrintWriter(new File("TotalTime.csv"));
             StringBuilder sb = new StringBuilder();
             sb.append("Total time");
             sb.append(",");
@@ -59,9 +40,9 @@ public class Main {
             sb.append("\n");
             
             for (int i = 0; i < numbOfIterations; i++) {
-            	// Statics.TOTAL_TIME += 10;
-            	// Statics.NODE_FAILURE_PROBABILITY++;
-                Statics.NEW_PACKET_PROBABILITY--;
+                Statics.TOTAL_TIME += 10;                           // used for TotalTime.csv
+//                Statics.NODE_FAILURE_PROBABILITY++;               // used for NodeFailure.csv
+//                Statics.NEW_PACKET_PROBABILITY--;                 // used for PacketsResult.csv
                 SimulationResult simulationResult = singlePathNetworkManager.simulate();
                 simulationResults.add(simulationResult);
                 sb.append(Statics.TOTAL_TIME);
@@ -93,29 +74,5 @@ public class Main {
         } catch (FileNotFoundException e ) {
             e.printStackTrace();
         }
-
     }
-
 }
-
-
-
-
-//sb.append("Total Time");
-//sb.append(",");
-//sb.append("Total number of packets");
-//sb.append(",");
-//sb.append("Total number of delivered packets");
-//sb.append(",");
-//sb.append("Total number of failed packets");
-//sb.append("\n");
-//for (int i = 0; i < simulationResults.size(); i++) {
-//  sb.append(simulationResults.get(i).getTotalTime());
-//  sb.append(",");
-//  sb.append(simulationResults.get(i).getTotalNumberOfPackets());
-//  sb.append(",");
-//  sb.append(simulationResults.get(i).getTotalNumberOfDeliveredPackets());
-//  sb.append(",");
-//  sb.append(simulationResults.get(i).getTotalNumberOfFailedPackets());
-//  sb.append("\n");
-//}
