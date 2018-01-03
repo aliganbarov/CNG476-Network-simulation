@@ -1,10 +1,10 @@
 package Listeners;
 
-import Models.Packets.AckMessage;
+import Packets.ACKMessage;
 
 /**
- * Created by AliPC on 03-Dec-17.
+ * Created by AliPC on 02-Jan-18.
  */
-public interface AckMessageListener {
-    void handleAckMessage(AckMessage ackMessage);
+public interface ACKMessageListener {
+    void onNewACKMessage(ACKMessage ackMessage);
 }

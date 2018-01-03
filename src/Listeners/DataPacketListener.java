@@ -1,12 +1,10 @@
 package Listeners;
 
-import Models.Packets.DataPacket;
-
-import java.util.ArrayList;
+import Packets.DataPacket;
 
 /**
- * Created by AliPC on 03-Dec-17.
+ * Created by AliPC on 02-Jan-18.
  */
 public interface DataPacketListener {
-    public void handleDataPacket(ArrayList<DataPacket> dataPackets);
+    void onNewDataPacket(DataPacket dataPacket);
 }
