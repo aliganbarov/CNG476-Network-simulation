@@ -16,6 +16,7 @@ import Packets.DataPacket;
 import Packets.SetupMessage;
 import Settings.Globals;
 import Settings.Rand;
+import Settings.Statics;
 import Threads.ACKMessageSender;
 import Threads.BrokenLinkMessageSender;
 import Threads.DataPacketSender;
@@ -94,7 +95,7 @@ public abstract class Node implements SetupMessageListener, ACKMessageListener, 
         for (int i = 0; i < nodes.size(); i++) {
             if (nodes.get(i).getId() == this.id) {
                 // check if previous node is available
-//                if (!Rand.simulate(Globals.probabilityOfLinkFailure)) {
+//                if (!Rand.simulate(Globals.probabilityOfLinkFailureSingle)) {
 //                    Thread ackService = new Thread(new ACKMessageSender(nodes.get(i-1), ackMessage));
 //                    ackService.start();
 //                } else {
@@ -116,7 +117,14 @@ public abstract class Node implements SetupMessageListener, ACKMessageListener, 
         for (int i = 0; i < nodes.size(); i++) {
             if (nodes.get(i).getId() == this.id) {
                 // check if next node link is not broken
-                if (!Rand.simulate(Globals.probabilityOfLinkFailure)) {
+                int probabilityOfLinkFailure = 10;
+                if (Globals.mode == Statics.SINGLE_PATH) {
+                    probabilityOfLinkFailure = Globals.probabilityOfLinkFailureSingle;
+                }
+                if (Globals.mode == Statics.MULTI_PATH) {
+                    probabilityOfLinkFailure = Globals.probabilityOfLinkFailureMulti;
+                }
+                if (!Rand.simulate(probabilityOfLinkFailure)) {
                     // System.out.println("Node " + id + " got data packet, sending to " + nodes.get(i+1).getId());
                     Thread dpService = new Thread(new DataPacketSender(nodes.get(i+1), dataPacket));
                     dpService.start();

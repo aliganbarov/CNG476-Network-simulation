@@ -10,8 +10,6 @@ import Threads.SetupMessageSender;
 import Threads.TimeSimulator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
 
 public class SourceNode extends Node {
 
@@ -37,17 +35,20 @@ public class SourceNode extends Node {
 
 
         while(true) {
+        	if (Globals.currentTime >= Globals.totalTime) {
+        		return;
+        	}
             if (routes.size() == 0) {
                 Globals.discoveryTime = 0;
                 createSetupMessages(destinationNodes.get(0));
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
 
-            if (Rand.simulate(1)) {
+            if (Rand.simulate(Globals.probabilityOfHavingNewPacket)) {
                 startTransmission(destinationNodes.get(0));
             }
             try {
@@ -61,6 +62,7 @@ public class SourceNode extends Node {
     // forward setup message to all neighbors on new thread
     public void createSetupMessages(Node node) {
         // System.out.println("New setup message is sent from source node");
+    	Globals.discoveryTime = 0;
         SetupMessage setupMessage = new SetupMessage(0, this, node);
         this.onNewSetupMessage(setupMessage);
     }
@@ -72,7 +74,10 @@ public class SourceNode extends Node {
         for (Route route: routes) {
             if (route.getDestinationNodeOfRoute().getId() == destinationNode.getId()) {
                 // create Data Packet to be sent
+                Globals.numberOfPacketsArrived++;
                 DataPacket dataPacket = new DataPacket(route);
+                dataPacket.setArrivalTime(Globals.currentTime);
+                System.out.println("New packet id is " + dataPacket.getId());
                 this.onNewDataPacket(dataPacket);
             }
         }
@@ -106,7 +111,11 @@ public class SourceNode extends Node {
     }
 
     public void routeSelectTimerExpired() {
-        System.out.println("Route select time expired");
+        System.out.println("Route select time expired with " + Globals.discoveryTime);
         routeDiscoveryInProgress = false;
+    }
+
+    public void resetRoutes() {
+        routes.clear();
     }
 }

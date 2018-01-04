@@ -18,8 +18,6 @@ public class SimulationRunner implements Runnable {
 
     @Override
     public void run() {
-        sourceNode.createSetupMessages(destinationNodes.get(0));
 
-        sourceNode.startTransmission(destinationNodes.get(0));
     }
 }

@@ -5,11 +5,10 @@ package Network;
     Topology is represented by NxN matrix of integers where M[i][j] represents weight between i-th and j-th nodes
  */
 
-import Nodes.DestinationNode;
-import Nodes.IntermediateNode;
-import Nodes.Node;
-import Nodes.SourceNode;
+import Nodes.*;
 import Settings.Globals;
+import Settings.Statics;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,7 +19,7 @@ public class NetworkTopology {
     private ArrayList<Node> intermediateNodes;
     private ArrayList<Node> destinationNodes;
 
-    public NetworkTopology() {
+    public NetworkTopology(int networkTopologyType) {
         // initialize nodes
         sourceNodes = new ArrayList<>(Globals.totalNumberOfSourceNodes);
         intermediateNodes = new ArrayList<>(Globals.totalNumberOfIntermediateNodes);
@@ -29,51 +28,47 @@ public class NetworkTopology {
         // initialize topology matrix
         matrixTopology = new int[Globals.totalNumberOfNodes][Globals.totalNumberOfNodes];
 
+        // random network
         // set weights for links between nodes
-//        Random random = new Random();
-//        for (int i = 0; i < 7; i++) {
-//            for (int j = i + 1; j < 7; j++) {
-//                int probabilityOfHavingNeighbor = random.nextInt(Globals.probabilityOfHavingNeighbor);
-//                if (probabilityOfHavingNeighbor == 0) {
-//                    matrixTopology[i][j] = 1;
-//                    matrixTopology[j][i] = matrixTopology[i][j];
-//                }
-//            }
-//        }
-
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                matrixTopology[i][j] = 0;
+        if (networkTopologyType == Statics.RANDOM_TOPOLOGY) {
+            Random random = new Random();
+            for (int i = 0; i < Globals.totalNumberOfNodes; i++) {
+                for (int j = i + 1; j < Globals.totalNumberOfNodes; j++) {
+                    int probabilityOfHavingNeighbor = random.nextInt(Globals.probabilityOfHavingNeighbor);
+                    if (probabilityOfHavingNeighbor == 0) {
+                        matrixTopology[i][j] = 1;
+                        matrixTopology[j][i] = matrixTopology[i][j];
+                    }
+                }
             }
         }
-        matrixTopology[0][1] = 1;
-        matrixTopology[0][2] = 1;
-        matrixTopology[1][0] = 1;
-        matrixTopology[1][3] = 1;
-        matrixTopology[2][0] = 1;
-        matrixTopology[2][3] = 1;
-        matrixTopology[2][4] = 1;
-        matrixTopology[3][1] = 1;
-        matrixTopology[3][2] = 1;
-        matrixTopology[3][6] = 1;
-        matrixTopology[4][2] = 1;
-        matrixTopology[4][5] = 1;
-        matrixTopology[5][4] = 1;
-        matrixTopology[5][6] = 1;
-        matrixTopology[6][3] = 1;
-        matrixTopology[6][5] = 1;
 
-        // 3 nodes
-//        matrixTopology = new int[3][3];
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = 0; j < 3; j++) {
-//                matrixTopology[i][j] = 0;
-//            }
-//        }
-//        matrixTopology[0][1] = 1;
-//        matrixTopology[1][0] = 1;
-//        matrixTopology[1][2] = 1;
-//        matrixTopology[2][1] = 1;
+
+        // predefined network
+        if (networkTopologyType == Statics.PREDEFINED_TOPOLOGY) {
+            for (int i = 0; i < 7; i++) {
+                for (int j = 0; j < 7; j++) {
+                    matrixTopology[i][j] = 0;
+                }
+            }
+            matrixTopology[0][1] = 1;
+            matrixTopology[0][2] = 1;
+            matrixTopology[1][0] = 1;
+            matrixTopology[1][3] = 1;
+            matrixTopology[2][0] = 1;
+            matrixTopology[2][3] = 1;
+            matrixTopology[2][4] = 1;
+            matrixTopology[3][1] = 1;
+            matrixTopology[3][2] = 1;
+            matrixTopology[3][6] = 1;
+            matrixTopology[4][2] = 1;
+            matrixTopology[4][5] = 1;
+            matrixTopology[5][4] = 1;
+            matrixTopology[5][6] = 1;
+            matrixTopology[6][3] = 1;
+            matrixTopology[6][5] = 1;
+        }
+
 
         // create all nodes with corresponding IDs
         int nodeId = 0;
@@ -171,5 +166,14 @@ public class NetworkTopology {
 
     public ArrayList<Node> getDestinationNodes() {
         return destinationNodes;
+    }
+
+    public void resetNetwork() {
+        for (int i = 0; i < sourceNodes.size(); i++) {
+            ((SourceNode)sourceNodes.get(i)).resetRoutes();
+        }
+        for (int i = 0; i < destinationNodes.size(); i++) {
+            ((DestinationNode)destinationNodes.get(i)).resetDestinationNode();
+        }
     }
 }

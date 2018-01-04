@@ -1,7 +1,5 @@
 package Network;
 
-import Nodes.DestinationNode;
-import Nodes.IntermediateNode;
 import Nodes.Node;
 import Nodes.SourceNode;
 import Settings.Globals;
@@ -22,23 +20,34 @@ public class MultiPath {
 
         sourceNodes = networkTopology.getSourceNodes();
         destinationNodes = networkTopology.getDestinationNodes();
-
-        networkTopology.printNetworkMatrix();
-        networkTopology.printNetworkNodes();
     }
 
     public void runSimulation() {
-        // reset current time
+        System.out.println("##############################");
+        System.out.println("STARTING MULTI PATH SIMULATION");
+    	
+        // reset globals
         Globals.currentTime = 0;
+        Globals.numberOfPacketsArrived = 0;
+        Globals.numberOfPacketsDelivered = 0;
+        Globals.currentPacketNo = 0;
 
+        System.out.println("Probability of link failure: " + Globals.probabilityOfLinkFailureSingle);
+        
         // set simulation mode
         Globals.mode = Statics.MULTI_PATH;
         // start simulation for all source nodes
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < Globals.totalNumberOfSourceNodes; i++) {
             for (Node sourceNode: sourceNodes) {
                 ((SourceNode)sourceNode).startSimulation(destinationNodes);
             }
         }
+        
+        System.out.println("MULTI PATH SIMULATION FINISHED");
+        System.out.println("# of packets delivered: " + Globals.numberOfPacketsDelivered);
+        System.out.println("# of packets arrived: " + Globals.numberOfPacketsArrived);
+        System.out.println("Throughput: " + (Globals.numberOfPacketsDelivered * 1.0) / Globals.numberOfPacketsArrived);
+        System.out.println("##############################");
 
     }
 

@@ -20,6 +20,10 @@ public class TimeSimulator implements Runnable {
     @Override
     public void run() {
         while(true) {
+        	if (Globals.currentTime >= Globals.totalTime) {
+        		Thread.currentThread().interrupt();
+        		return;
+        	}
             final long INTERVAL = Globals.timerInterval;
             long start = System.nanoTime();
             long end = 0;

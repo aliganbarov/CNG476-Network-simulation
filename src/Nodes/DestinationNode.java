@@ -46,7 +46,7 @@ public class DestinationNode extends Node {
         send ACK message on chosen path/paths
      */
     public void routeSelectTimerExpired() {
-        System.out.println("Route select time in destination expired");
+        System.out.println("Route select time in destination expired with " + Globals.discoveryTime);
         if (Globals.mode == Statics.SINGLE_PATH) {
             int bestCost = 99999;
             SetupMessage bestSM = null;
@@ -90,8 +90,6 @@ public class DestinationNode extends Node {
             }
         }
         createACKMessages();
-
-
     }
 
     private void createACKMessages() {
@@ -100,16 +98,22 @@ public class DestinationNode extends Node {
             return;
         }
         for (Route route: bestRoutes) {
-            // System.out.println("Creating ACK message");
+            System.out.println("Creating ACK message for route ");
+            route.printRoute();
+            System.out.println();
             ACKMessage ackMessage = new ACKMessage(route);
             this.onNewACKMessage(ackMessage);
         }
+        bestRoutes.clear();
     }
 
     @Override
     public void onNewDataPacket(DataPacket dataPacket) {
-        System.out.println("Destination got new data packet: " + dataPacket.getId());
-        Globals.successfulDataPackets++;
+        Globals.numberOfPacketsDelivered++;
+        dataPacket.setFinishTime(Globals.currentTime);
+        Globals.totalTimeOfDeliveredPacketsInSystem = (dataPacket.getFinishTime() - dataPacket.getArrivalTime()) / 1000000.0;
+        System.out.println("Destination got new data packet: " + dataPacket.getId() + ". Total packets delivered: " +
+                Globals.numberOfPacketsDelivered);
     }
 
     /*
@@ -130,5 +134,10 @@ public class DestinationNode extends Node {
         for (int i = 0; i < minCostPath.size(); i++) {
             System.out.println(minCostPath.get(i).getId() + " with activity " + minCostPath.get(i).getActivity());
         }
+    }
+
+    public void resetDestinationNode() {
+        setupMessages.clear();
+        bestRoutes.clear();
     }
 }
